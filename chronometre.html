@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <a href="add.html">
+    <img src="return.png" style="position : absolute; left : 20px; top : 20px;">
+    </a>
+
+    <h1 style="position : absolute; top : 50px; color : white; letter-spacing : 10px;">TIMER</h1>
+
+
+    <h2  name="affi" id="time"></h2><br><br>
+	<form name="parametre" id="parametre"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<input type="button" name="lance"  value="START" onclick="chrono();debut();" style="border : none; width : 150px; height : 50px; font-size : 2rem;color : black; background-color :white"><br><br>
+	<input type="button" name="pause"  value="STOP" onclick="arret();" disabled="disabled"  style="border : none; width : 150px; height : 50px; font-size : 2rem;">
+	<input type="button" name="zero"  value="RESET" onclick="arret();raz();effacer();" disabled="disabled"  style="border : none; width : 150px; height : 50px; font-size : 2rem;"><br><br><br><br>
+	<input type="button" name="interme"  value="ROUND" onclick="inter();" disabled="disabled"  style="border : none; width : 150px; height : 50px; font-size : 2rem;">
+	</form>
+	<div id="presenter">
+	<dl>
+	<hr width="150">
+	<dd id="interm1"> </dd>
+	<hr>
+	<dd id="interm2"> </dd>
+	<hr>
+	<dd id="interm3"> </dd>
+	<hr>
+	<dd id="interm4"> </dd>
+	<hr>
+	<dd id="interm5"> </dd>
+	</dl>
+	<input type="button" name="Effacer"  value="CLEAR ALL" onclick="effacer();debut();"  style="border : none; width : 150px; height : 50px; font-size : 1rem;">
+
+    
+    <style>
+		#time
+		{  position : absolute; left : 45px;
+			color:white;
+            top : 200px;
+			font-size: 75px;
+			background-image:url('http://nsa10.casimages.com/img/2010/01/04/100104100036575158.png');
+			text-align: center;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+		#presenter
+		{
+            position : relative;
+            top : 180px;
+            right : 225px;
+			list-style-type: decimal;
+			font-size: 17px;
+			visibility: hidden;
+		}
+		
+        #parametre {
+            position : relative; left : 220px;
+        }
+
+		dt
+		{
+            color : white;
+			font-size: 20px;
+			text-decoration: underline;
+		}
+        #interm1 {
+            color : white;
+        }
+        #interm2 {
+            color : white;
+        }
+        #interm3 {
+            color : white;
+        }
+        #interm4 {
+            color : white;
+        }
+        #interm5 {
+            color : white;
+        }
+
+
+
+			</style>
+
+    <script>	
+	    var centi = 0;
+	    var sec = 0;
+	    var min = 0;
+	    var h = 0;
+	    var loc;
+    	var compt = 0;
+	
+	function chrono()
+		{
+			centi++;
+			centi*10;//=======pour passer en dixièmes de sec
+			//=== on remet à zéro quand on passe à 1seconde, 1min, 1heure, 1jour
+			if (centi > 9) {
+				centi = 0;
+				sec++;
+			}
+								
+			if (sec > 59) {
+				sec = 0;
+				min++;
+			}
+								
+			if (min > 59) {
+				min = 0;
+				h++;
+			}
+								
+			//======
+			
+			//================ On ajoute un zero pour avoir 1h01:05sec
+			
+			if (sec < 10) {
+				var sec_ = "0" + sec;
+			}
+			else {
+				var sec_ = sec;
+			}
+				
+			if (min < 10) {
+				var min_ = "0" + min;
+			}
+			else {
+				var min_ = min;
+			}
+			//===============
+								
+			var loc = h + ":" + min_ + ":" + sec_ + ":" + centi;
+			//================= Pour que cela s'affiche dans l'élément "time"
+			document.getElementById("time").innerHTML = loc;
+			//=================lancement du chrono
+			reglage = window.setTimeout("chrono();",100);
+		} 
+	
+	
+	    function debut()  //== Activation et désactivation des boutons
+		{
+				document.parametre.lance.disabled = "disabled";
+				document.parametre.pause.disabled = "";
+				document.parametre.zero.disabled = "";
+				document.parametre.interme.disabled = "";
+		}
+	    function arret() 
+		{	
+				window.clearTimeout(reglage); // arrêter le temps
+				document.parametre.lance.disabled = "";
+				document.parametre.pause.disabled = "disabled";
+				document.parametre.zero.disabled = "";
+				document.parametre.interme.disabled = "";
+		}
+		//=============
+    	function raz() //====pour remettre à zéro
+		{ 
+				document.parametre.zero.disabled = "disabled";
+				document.parametre.interme.disabled = "disabled";
+				centi =0;
+				sec = 0;
+				min = 0;
+				h = 0; 
+				loc = h + ":" + min+ "0:" + sec + "0:" + centi;	
+				document.getElementById("time").innerHTML = loc;
+				document.getElementById('presenter').style.visibility='hidden';
+		    }
+		
+	    	function inter() //====Pour afficher les temps intermédiaires
+	    	{
+			centi;
+			sec ;
+			min ;
+			h ;
+			loc;
+			//======on reprend la condition pour que ily ait 1h01 et 05 sec
+			if (sec < 10) {
+				var sec_ = "0" + sec;
+			}
+			else {
+				var sec_ = sec;
+			}
+				
+			if (min < 10) {
+				var min_ = "0" + min;
+			}
+			else {
+				var min_ = min;
+			}
+			
+			///=====================
+			 loc = h + ":" + min_ + ":" + sec_ + ":" + centi;
+			 //=====================
+			document.getElementById('presenter').style.visibility='visible';
+			// pour afficher les temps intermédiaire si on clique dessus
+			if(compt == 0)
+			document.getElementById("interm1").innerHTML = loc ;
+			else if(compt == 1)
+			document.getElementById("interm2").innerHTML = loc ;
+			else if(compt == 2)
+			document.getElementById("interm3").innerHTML = loc ;
+			else if(compt == 3)
+			document.getElementById("interm4").innerHTML = loc ;
+			else if(compt == 4)
+			document.getElementById("interm5").innerHTML = loc ;
+
+			compt++;
+			//=====================
+	    	}
+		
+	    	function effacer()
+	    	{
+			document.getElementById("interm1").innerHTML = "" ;
+			document.getElementById("interm2").innerHTML = "" ;
+			document.getElementById("interm3").innerHTML = "" ;
+			document.getElementById("interm4").innerHTML = "" ;
+			document.getElementById("interm5").innerHTML = "" ;
+			compt= 0
+	    	}
+			
+    </script>
+
+	 
+	 
+	
+</body>
+</html>
