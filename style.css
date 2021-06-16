@@ -4,7 +4,7 @@ body {
     justify-content: center;
     margin : 0;
     padding : 0;
-    background-color : white;
+    background-color : black;
 }
 
 .top{
@@ -28,5 +28,5 @@ body {
     display : flex;
     flex-direction : column;
     margin-top : 100px;
-    margin-bottom : 800px;
+    margin-bottom : 400px;
 }
