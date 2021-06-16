@@ -36,10 +36,10 @@ body {
 .boxappli {
     width: 90px;
     height: 90px;
-    background-color: rgb(31, 31, 31);
-    position: relative;
+    background-color: #24283b;
+    position: absolute;
     border-radius : 10px;
-    top: 100px;
+
   }
 
 .boxappli::before,
