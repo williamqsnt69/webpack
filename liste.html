@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+
+    <div id="todo-wrap">
+        <!-- (A) HEADER -->
+       <h1>TO DO LIST</h1>
+      
+       <!-- (B) ADD NEW ITEM -->
+       <form id="todo-add">
+         <input type="text" id="todo-item" placeholder="New Item" required/>
+         <input type="submit" id="todo-save" value="&#10010;"/>
+       </form>
+     
+       <!-- (C) DELETE ITEMS -->
+       <div id="todo-del">
+         <input type="button" value="Delete All" id="todo-delall"/>
+         <input type="button" value="Delete Completed" id="todo-delcom"/>
+       </div>
+     
+       <!-- (D) LIST ITEMS -->
+       <div id="todo-list"></div>
+     </div>
+
+
+
+    <style>
+        /* (A) GENERAL FORM STYLES */
+#todo-wrap input { box-sizing: border-box; }
+#todo-wrap input { padding: 10px; }
+#todo-wrap input[type=button], #todo-wrap input[type=submit] {
+  color: #fff;
+  cursor: pointer;
+}
+ 
+/* (B) WHOLE CONTAINER */
+#todo-wrap {
+  max-width: 500px;
+  background: #f2f2f2;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+/* (C) HEADER */
+#todo-wrap h1 {
+  font-size: 1.5em;
+  margin: 0;
+  color: #333;
+}
+
+/* (D) ADD ITEM */
+#todo-add { display: flex; }
+#todo-item { width: 85%; }
+#todo-save {
+  width: 15%;
+  background: #5866CF;
+  border: 2px solid #5866CF;
+}
+
+/* (E) DELETE ITEMS */
+#todo-del { margin: 10px 0;}
+#todo-del input {
+  background: #CF585C;
+  border: 2px solid #CF585C;
+}
+
+/* (F) LIST ITEMS */
+/* (F1) ITEM ROW */
+.todo-row { 
+  display: flex; 
+  margin-top: 10px;
+}
+/* (F2) ITEM TEXT */
+.todo-item { 
+  width: 100%; 
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 10px;
+}
+.todo-item.cx {
+  background: #FFE1D7;
+  text-decoration: line-through;
+}
+.todo-item.done {
+  background: #DCFFD7;
+}
+/* (F3) CANCEL AND OK BUTTONS */
+.todo-cx, .todo-ok {
+  width: 50px;
+}
+.todo-cx {
+  background: #CF585C;
+  border: 2px solid #CF585C;
+}
+.todo-ok {
+  background: #4AA53D;
+  border: 2px solid #4AA53D;
+}
+
+/* (G) DOES NOT MATTER */
+html, body, input {
+  font-family: arial, sans-serif;
+}
+html, body {
+  padding: 0;
+  margin: 0;
+}
+    </style>
+
+
+<script>
+        var todo = {
+  data: [], // holder for todo list array
+
+  // (A) LOAD DATA FROM LOCAL STORAGE INTO TODO.DATA
+  load: function () {
+    // (A1) INIT LOCALSTORAGE
+    if (localStorage.list == undefined) {
+      localStorage.list = "[]";
+    }
+
+    // (A2) DECODE PREVIOUS SESSION INTO TODO.DATA
+    // todo.data is an array with format of:
+    // [0] = Task
+    // [1] = Status : 0 not done, 1 completed, 2 cancelled
+    todo.data = JSON.parse(localStorage.list);
+    todo.list();
+  },
+
+  // (B) SAVE CURRENT DATA INTO LOCAL STORAGE
+  save: function () {
+
+    localStorage.list = JSON.stringify(todo.data);
+    todo.list();
+  },
+
+  // (C) DRAW TODO HTML
+  list: function () {
+
+    // (C1) CLEAR THE OLD LIST
+    var container = document.getElementById("todo-list");
+    container.innerHTML = "";
+
+    // (C2) BUILD LIST
+    if (todo.data.length > 0) {
+      var row = "", el = "";
+      for (var key in todo.data) {
+        // Item row
+        row = document.createElement("div");
+        row.classList.add("clearfix");
+        row.dataset.id = key;
+
+        // Item text
+        el = document.createElement("div");
+        el.classList.add("item");
+        if (todo.data[key][1] == 1) {
+          el.classList.add("done");
+        }
+        if (todo.data[key][1] == 2) {
+          el.classList.add("cx");
+        }
+        el.innerHTML = todo.data[key][0];
+        row.appendChild(el);
+
+        // Cancel button
+        el = document.createElement("input");
+        el.setAttribute("type", "button");
+        el.value = "\u2716";
+        el.classList.add("bdel");
+        el.addEventListener("click", function () {
+          todo.status(this, 2);
+        });
+        row.appendChild(el);
+
+        // OK button
+        el = document.createElement("input");
+        el.setAttribute("type", "button");
+        el.value = "\u2714";
+        el.classList.add("bdone");
+        el.addEventListener("click", function () {
+          todo.status(this, 1);
+        });
+        row.appendChild(el);
+
+        // Add row to list
+        container.appendChild(row);
+      }
+    }
+  },
+
+  // (D) ADD NEW TODO ITEM
+  add: function () {
+
+    let item = document.getElementById("todo-item");
+    todo.data.push([item.value, 0]);
+    item.value = "";
+    todo.save();
+  },
+
+  // (E) UPDATE TODO ITEM STATUS
+  status: function (el, stat) {
+
+    var parent = el.parentElement;
+    todo.data[parent.dataset.id][1] = stat;
+    todo.save();
+  },
+
+  // (F) DELETE ITEM(S)
+  del: function (type) { if (confirm("Delete tasks?")) {
+    // (F1) DELETE ALL
+    if (type == 0) {
+      todo.data = [];
+      todo.save();
+    }
+    // (F2) DELETE ONLY COMPLETED TASKS
+    else {
+      todo.data = todo.data.filter(row => row[1]==0);
+      todo.save();
+    }
+  }}
+};
+
+// (G) PAGE INIT
+window.addEventListener("load", function () {
+  document.getElementById("todo-delall").addEventListener("click", function () {
+    todo.del(0);
+  });
+  document.getElementById("todo-delcom").addEventListener("click", function () {
+    todo.del(1);
+  });
+  document.getElementById("todo-add").addEventListener("submit", function (evt) {
+    evt.preventDefault();
+    todo.add();
+  });
+  todo.load();
+});
+    </script>
+
+
+</body>
+</html>
