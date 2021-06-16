@@ -19,7 +19,7 @@
     <h2  name="affi" id="time"></h2><br><br>
 	<form name="parametre" id="parametre"><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 	<input type="button" name="lance"  value="START" onclick="chrono();debut();" style="border : none; width : 150px; height : 50px; font-size : 2rem;color : black; background-color :white"><br><br>
-	<input type="button" name="pause"  value="STOP" onclick="arret();" disabled="disabled"  style="border : none; width : 150px; height : 50px; font-size : 2rem;">
+	<input type="button" name="pause"  value="STOP" onclick="arret();" disabled="disabled"  style="border : none; width : 150px; height : 50px; font-size : 2rem;"><br><br>
 	<input type="button" name="zero"  value="RESET" onclick="arret();raz();effacer();" disabled="disabled"  style="border : none; width : 150px; height : 50px; font-size : 2rem;"><br><br><br><br>
 	<input type="button" name="interme"  value="ROUND" onclick="inter();" disabled="disabled"  style="border : none; width : 150px; height : 50px; font-size : 2rem;">
 	</form>
@@ -43,7 +43,7 @@
 		#time
 		{  position : absolute; left : 45px;
 			color:white;
-            top : 200px;
+            top : 100px;
 			font-size: 75px;
 			background-image:url('http://nsa10.casimages.com/img/2010/01/04/100104100036575158.png');
 			text-align: center;
@@ -53,15 +53,15 @@
 		#presenter
 		{
             position : relative;
-            top : 180px;
-            right : 225px;
+            top : 100px;
+            right : 175px;
 			list-style-type: decimal;
 			font-size: 17px;
 			visibility: hidden;
 		}
 		
         #parametre {
-            position : relative; left : 220px;
+            position : relative; top : -100px; left : 160px;
         }
 
 		dt
