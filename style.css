@@ -59,7 +59,7 @@ body {
 }
 
 .boxappli::after {
-    filter: blur(20px);
+    filter: blur(5px);
   }
 
   @keyframes animate {
